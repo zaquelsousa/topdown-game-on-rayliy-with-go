@@ -2,13 +2,14 @@ package main
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/zaquelsousa/topdown-game-on-rayliy-with-go/assets"
 	"github.com/zaquelsousa/topdown-game-on-rayliy-with-go/player"
 )
 
 // game congif
 const (
-	screenWidth  = int32(512)
-	screenHeight = int32(224)
+	screenWidth  = int32(640)
+	screenHeight = int32(360)
 )
 
 type Obj struct {
@@ -26,8 +27,7 @@ type Game struct {
 
 // Initialize the game state
 func (g *Game) Init() {
-	plrSprite := rl.LoadTexture("player/sprites/player.png")
-	g.Player = player.NewPlayer(plrSprite)
+	g.Player = player.NewPlayer()
 
 	//camera configs
 	g.Camera.Target = rl.NewVector2(g.Player.Position.X+20, g.Player.Position.Y+20)
@@ -44,7 +44,7 @@ func (g *Game) Init() {
 
 // Game update logic
 func (g *Game) Update() {
-	g.Player.Update()
+	g.Player.Update(g.Camera)
 	g.Camera.Target = rl.NewVector2(g.Player.Position.X+20, g.Player.Position.Y+20)
 }
 
@@ -57,14 +57,15 @@ func (g *Game) Draw() {
 }
 
 func main() {
-	screenWidth := int32(512)
-	screenHeight := int32(224)
-
+	//flg to resize the window
+	rl.SetConfigFlags(rl.FlagWindowResizable)
 	rl.InitWindow(screenWidth, screenHeight, "raylib -go template")
 	defer rl.CloseWindow()
 
 	rl.SetTargetFPS(60)
 
+	assets.LoadTextures()
+	defer assets.UnloadTextures()
 	var game Game
 	game.Init()
 
