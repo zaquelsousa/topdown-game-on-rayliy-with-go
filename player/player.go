@@ -17,11 +17,6 @@ type Player struct {
 	Sword    weapons.Sword
 }
 
-const (
-	FrameCount      = 2
-	FrameWidthRatio = 1.0 / FrameCount
-)
-
 func NewPlayer() Player {
 	return Player{
 		Position: rl.NewVector2(256, 112),
@@ -48,7 +43,8 @@ func (p *Player) Update(camera rl.Camera2D) {
 		p.Position.Y += p.Speed * rl.GetFrameTime()
 	}
 	p.Sword.UpdateSwordPos(p.Position, camera)
-	p.Sword.SwordAttk()
+	p.Sword.SwordAttk(p.Sword)
+
 }
 
 func (p *Player) Draw() {

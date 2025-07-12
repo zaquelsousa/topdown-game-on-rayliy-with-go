@@ -29,15 +29,15 @@ func NewSword() Sword {
 		Pos:          rl.NewVector2(256, 112),
 		Width:        4,
 		Height:       12,
-		Damege:       15,
+		Damege:       8,
 		IsAttk:       false,
 		AttkTimer:    0,
-		AttkDuration: 1,
+		AttkDuration: 0.1,
 		Texture:      assets.SwordSprite,
 	}
 }
 
-func (s *Sword) SwordAttk() {
+func (s *Sword) SwordAttk(ataque Sword) {
 	if rl.IsMouseButtonPressed(rl.MouseButtonLeft) && !s.IsAttk {
 		s.IsAttk = true
 		s.AttkTimer = 0

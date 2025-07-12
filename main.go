@@ -3,56 +3,49 @@ package main
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/zaquelsousa/topdown-game-on-rayliy-with-go/assets"
+	"github.com/zaquelsousa/topdown-game-on-rayliy-with-go/maps"
 	"github.com/zaquelsousa/topdown-game-on-rayliy-with-go/player"
 )
 
 // game congif
 const (
-	screenWidth  = int32(640)
-	screenHeight = int32(360)
+	screenWidth  = int32(512)
+	screenHeight = int32(224)
 )
-
-type Obj struct {
-	Pos    rl.Vector2
-	Width  float32
-	Height float32
-}
 
 // Game struct
 type Game struct {
-	Player player.Player
-	Camera rl.Camera2D
-	obj    Obj
+	Player      player.Player
+	Camera      rl.Camera2D
+	CurrentRoom maps.Room
 }
 
 // Initialize the game state
 func (g *Game) Init() {
 	g.Player = player.NewPlayer()
+	g.CurrentRoom = maps.NewRoom()
+	g.CurrentRoom.SpawnEnemy()
 
 	//camera configs
 	g.Camera.Target = rl.NewVector2(g.Player.Position.X+20, g.Player.Position.Y+20)
 	g.Camera.Offset = rl.NewVector2(float32(screenWidth/2), float32(screenHeight/2))
 	g.Camera.Rotation = 0.0
-	g.Camera.Zoom = 2.0
-
-	g.obj = Obj{
-		Pos:    rl.NewVector2(30, float32(screenHeight/2-50)),
-		Width:  10,
-		Height: 100,
-	}
+	g.Camera.Zoom = 1.5
 }
 
 // Game update logic
 func (g *Game) Update() {
 	g.Player.Update(g.Camera)
+	g.CurrentRoom.Update(g.Player.Position, g.Player.Sword)
 	g.Camera.Target = rl.NewVector2(g.Player.Position.X+20, g.Player.Position.Y+20)
 }
 
 // Draw game elements
 func (g *Game) Draw() {
 	rl.BeginMode2D(g.Camera)
+	maps.LoadMap()
+	g.CurrentRoom.Draw()
 	g.Player.Draw()
-	rl.DrawRectangleV(g.obj.Pos, rl.NewVector2(g.obj.Width, g.obj.Height), rl.Black)
 	rl.EndMode2D()
 }
 
